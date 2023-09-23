@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\CreateUserAction;
+use App\Actions\Auth\LoginUserAction;
+use App\DTOs\App\ErrorDTO;
+use App\DTOs\Auth\CreateUserDTO;
+use App\DTOs\Auth\LoginCredentialsDTO;
+use App\Exceptions\AppException;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResourse;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
@@ -18,24 +27,23 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+
+
+    public function store(CreateUserDTO $request): JsonResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return response()->noContent();
+        try {
+            $user = (new CreateUserAction())->handle(
+                dto: CreateUserDTO::fromRequest(request: \request())
+            );
+        } catch (AppException $e) {
+            return err(error: ErrorDTO::fromArray(array: [
+                'title' => $e->getMessage(),
+                'desc' => 'Something went wrong, please try again later.',
+            ]));
+        }
+//        $token = $user->createToken('Device')->plainTextToken;
+        return ok(data: new UserResourse($user));
     }
+
+
 }
