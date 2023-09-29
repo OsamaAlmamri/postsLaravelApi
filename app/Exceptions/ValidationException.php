@@ -7,9 +7,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Validator  ;
 class ValidationException extends Exception
 {
-public function __construct( Validator $validaitor)
+    private Validator $validator;
+public function __construct( Validator $validator)
 {
-    $this->validaitor=$validaitor;
+    $this->validator=$validator;
 }
 
     public function render(): JsonResponse
@@ -17,7 +18,7 @@ public function __construct( Validator $validaitor)
 
         return response()->json([
             'message'  => 'Unprocessable Entity',
-            'errors' => $this->validaitor->errors(),
+            'errors' => $this->validator->errors(),
         ], 422);
     }
 }

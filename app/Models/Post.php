@@ -9,8 +9,10 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $guarded=['id'];
+
     public function tags()
     {
-        return $this->hasMany(Tag::class);
+        return $this->belongsToMany(Tag::class,'post_tags');
     }
 }

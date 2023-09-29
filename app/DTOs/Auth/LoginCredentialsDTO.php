@@ -29,6 +29,7 @@ class LoginCredentialsDTO extends ValidatedDTO
 
     protected function failedValidation(): void
     {
+
         throw new ValidationException($this->validator);
 
     }

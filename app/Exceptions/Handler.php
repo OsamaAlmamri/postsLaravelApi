@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Illuminate\Auth\AuthenticationException;
+use App\Exceptions\Auth\UserNotActiveException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -39,7 +40,7 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e): Response|JsonResponse
     {
         if ($request->ajax() || $request->wantsJson()) {
             $debug = app()->hasDebugModeEnabled() ? [
@@ -53,7 +54,6 @@ class Handler extends ExceptionHandler
             if ($e instanceof AuthenticationException) {
                 return err(error: 'codes.unauthenticated', status: 401, debug: $debug);
             }
-
 
 
             if ($e instanceof AuthorizationException || $e instanceof AccessDeniedHttpException) {
@@ -83,11 +83,7 @@ class Handler extends ExceptionHandler
             if ($e instanceof Exception && $e->getCode() === 500) {
                 return err(error: 'codes.internal_server_error', status: 500, debug: $debug);
             }
-            else  {
-                return err(error: 'codes.internal_server_error', status: 500, debug: $debug);
-            }
         }
-
 
         return parent::render(request: $request, e: $e);
     }

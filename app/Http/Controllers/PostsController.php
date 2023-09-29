@@ -31,10 +31,13 @@ class PostsController extends Controller
     public function store(PostDTO $request)
     {
         try {
-            $post = Post::create(\request()->all());
+            $post = Post::create([
+                'title' => request()->title,
+                'description' => request()->description,
+                'user_id' => auth()->id(),
+            ]);
 
-            $tags = $request->input('tags');
-            $post->tags()->sync($tags);
+            $post->tags()->sync(request()->tags);
 
         } catch (AppException $e) {
             return err(error: ErrorDTO::fromArray(array: [
@@ -47,15 +50,31 @@ class PostsController extends Controller
 
     }
 
-    public function update(Request $request, $id)
+    public function update(PostDTO $request, $id)
     {
-        $post = Post::findOrFail($id);
-        $post->update($request->all());
+        $post = Post::indOrFail($id);
 
-        $tags = $request->input('tags');
-        $post->tags()->sync($tags);
+//        return err(error: ErrorDTO::fromArray(array: [
+//            'title' => $e->getMessage(),
+//            'desc' => 'Something went wrong, please try again later.',
+//        ]));
+        try {
+            $post->update([
+                'title' => request()->title,
+                'description' => request()->description,
+                'user_id' => auth()->id(),
+            ]);
 
+            $post->tags()->sync(request()->tags);
+
+        } catch (AppException $e) {
+            return err(error: ErrorDTO::fromArray(array: [
+                'title' => $e->getMessage(),
+                'desc' => 'Something went wrong, please try again later.',
+            ]));
+        }
         return ok(data: new PostResource($post));
+
     }
 
     public function destroy($id)
