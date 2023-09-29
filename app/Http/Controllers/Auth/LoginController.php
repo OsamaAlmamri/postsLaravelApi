@@ -40,7 +40,7 @@ class LoginController extends Controller
     {
         try {
 //           \auth()->logout();
-      
+
             DB::table('personal_access_tokens')->where('tokenable_id', \auth()->id())
                 ->delete();
         } catch (AppException $e) {

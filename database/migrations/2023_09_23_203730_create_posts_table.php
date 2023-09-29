@@ -10,12 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('otps', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('otp');
+            $table->string('title');
+            $table->text('description');
             $table->foreignId('user_id')
                 ->constrained('users', 'id')->onDelete('cascade');
-            $table->string('email');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('otps');
+        Schema::dropIfExists('posts');
     }
 };

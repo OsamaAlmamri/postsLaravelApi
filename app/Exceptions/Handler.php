@@ -9,7 +9,6 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Illuminate\Auth\AuthenticationException;
-use App\Exceptions\Auth\UserNotActiveException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -55,9 +54,7 @@ class Handler extends ExceptionHandler
                 return err(error: 'codes.unauthenticated', status: 401, debug: $debug);
             }
 
-            if ($e instanceof UserNotActiveException) {
-                return err(error: 'codes.deactivated', status: 401, debug: $debug);
-            }
+
 
             if ($e instanceof AuthorizationException || $e instanceof AccessDeniedHttpException) {
                 return err(error: 'codes.forbidden', status: 403, debug: $debug);
