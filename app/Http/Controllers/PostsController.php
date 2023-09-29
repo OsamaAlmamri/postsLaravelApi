@@ -17,8 +17,9 @@ class PostsController extends Controller
 
     public function index(Request $request)
     {
-        $posts = Post::with('tags')->get();
-        return ok(data: PostResource::collection($posts));
+        $posts = Post::with('tags')->paginate(5);
+        PostResource::collection($posts);
+        return ok(data:$posts);
 
     }
 
