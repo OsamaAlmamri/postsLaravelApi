@@ -52,12 +52,8 @@ class PostsController extends Controller
 
     public function update(PostDTO $request, $id)
     {
-        $post = Post::indOrFail($id);
+        $post = Post::where('user_id',auth()->id())->findOrFail($id);
 
-//        return err(error: ErrorDTO::fromArray(array: [
-//            'title' => $e->getMessage(),
-//            'desc' => 'Something went wrong, please try again later.',
-//        ]));
         try {
             $post->update([
                 'title' => request()->title,
@@ -79,7 +75,7 @@ class PostsController extends Controller
 
     public function destroy($id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::where('user_id',auth()->id())->findOrFail($id);
         $post->delete();
 
         return response()->json(null, 204);
