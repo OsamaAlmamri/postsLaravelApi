@@ -27,7 +27,66 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-
+    /**
+     * @OA\POST (
+     *      path="/api/register",
+     *      operationId="register",
+     *      tags={"auth"},
+     *      summary=" register new account",
+     *      description=" ",
+     *        @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/RegisterRequest")
+     *      ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Error")
+     *             )
+     *         )
+     *     ),
+     *  @OA\Response(
+     *          response=422,
+     *              description="Error in Requried Inputs",
+     *        @OA\JsonContent(
+     *          type="object",
+     *       * @OA\Property(
+     *          property="message",
+     *          type="string",
+     *          description="Error Message",
+     *          example="Unprocessable Entity"
+     *      ),
+     *        @OA\Property(
+     *          property="errors",
+     *          type="Object",
+     *          description="Errors",
+     *
+     *          example= "{'email': ['الإيميل مطلوب'   ]}"
+     *                  )
+     *              )
+     *          ),
+     *
+     *   *   @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                property="data",
+     *                 oneOf={
+     *                 @OA\Schema(ref="#/components/schemas/User")
+     *
+     *             },
+     *             )
+     *         )
+     *     )
+     *     )
+     */
 
     public function store(CreateUserDTO $request): JsonResponse
     {

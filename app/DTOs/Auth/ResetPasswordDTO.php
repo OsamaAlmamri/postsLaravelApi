@@ -15,7 +15,8 @@ class ResetPasswordDTO extends ValidatedDTO
         return [
             'email' => 'required|exists:users,email',
             'otp' => ['required'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['nullable', 'string', 'min:6', 'max:15'],
+            'password_confirmation' => ['required', 'string', 'min:6', 'max:50'],
         ];
     }
 

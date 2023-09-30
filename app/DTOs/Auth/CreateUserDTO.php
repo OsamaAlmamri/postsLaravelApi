@@ -21,6 +21,7 @@ class CreateUserDTO extends ValidatedDTO
             'name' => ['required', 'string', 'min:3', 'max:30'],
             'email' => ['required', 'string', 'email', 'max:50', 'unique:users,email'],
             'password' => ['nullable', 'string', 'min:6', 'max:15'],
+            'password_confirmation' => ['required', 'string', 'min:6', 'max:50'],
         ];
     }
 

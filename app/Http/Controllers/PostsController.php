@@ -29,6 +29,71 @@ class PostsController extends Controller
         return ok(data: new PostResource($post));
     }
 
+    /**
+
+     * @OA\POST (
+     *      path="/api/posts",
+     *      operationId="crate-post",
+     *      tags={"posts"},
+     *      summary=" Add new Post",
+     *      description=" ",
+     *        security={
+     *         {"Authorization": {}}
+     *     },
+     *        @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/PostRequest")
+     *      ),
+
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Error")
+     *             )
+     *         )
+     *     ),
+     *  @OA\Response(
+     *          response=422,
+     *              description="Error in Requried Inputs",
+     *        @OA\JsonContent(
+     *          type="object",
+     *       * @OA\Property(
+     *          property="message",
+     *          type="string",
+     *          description="Error Message",
+     *          example="Unprocessable Entity"
+     *      ),
+     *        @OA\Property(
+     *          property="errors",
+     *          type="Object",
+     *          description="Errors",
+     *
+     *          example= "{'email': ['العنوان مطلوب'   ]}"
+     *                  )
+     *              )
+     *          ),
+     *
+     *   *   @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                property="data",
+     *                 oneOf={
+     *                 @OA\Schema(ref="#/components/schemas/Post")
+     *
+     *             },
+     *             )
+     *         )
+     *     )
+     *     )
+     */
     public function store(PostDTO $request)
     {
         try {
@@ -51,6 +116,78 @@ class PostsController extends Controller
 
     }
 
+    /**
+
+     * @OA\Put (
+     *      path="/api/posts/{id}",
+     *      operationId="update-post",
+     *      tags={"posts"},
+     *      summary=" Update the Post",
+     *      description=" ",
+     *        security={
+     *         {"Authorization": {}}
+     *     },
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Example ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *        @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/PostRequest")
+     *      ),
+
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Error")
+     *             )
+     *         )
+     *     ),
+     *  @OA\Response(
+     *          response=422,
+     *              description="Error in Requried Inputs",
+     *        @OA\JsonContent(
+     *          type="object",
+     *       * @OA\Property(
+     *          property="message",
+     *          type="string",
+     *          description="Error Message",
+     *          example="Unprocessable Entity"
+     *      ),
+     *        @OA\Property(
+     *          property="errors",
+     *          type="Object",
+     *          description="Errors",
+     *
+     *          example= "{'email': ['العنوان مطلوب'   ]}"
+     *                  )
+     *              )
+     *          ),
+     *
+     *   *   @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                property="data",
+     *                 oneOf={
+     *                 @OA\Schema(ref="#/components/schemas/Post")
+     *
+     *             },
+     *             )
+     *         )
+     *     )
+     *     )
+     */
     public function update(PostDTO $request, $id)
     {
         $post = Post::where('user_id',auth()->id())->findOrFail($id);
@@ -74,13 +211,58 @@ class PostsController extends Controller
 
     }
 
+
+    /**
+
+     * @OA\Delete (
+     *      path="/api/posts/{id}",
+     *      operationId="delete-post",
+     *      tags={"posts"},
+     *      summary=" Update the Post",
+     *      description=" ",
+     *        security={
+     *         {"Authorization": {}}
+     *     },
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Example ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Error")
+     *             )
+     *         )
+     *     ),
+     *   *   @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                property="data",
+     *
+     *             )
+     *         )
+     *     )
+     *     )
+     */
     public function destroy($id)
     {
         $post = Post::where('user_id',auth()->id())->findOrFail($id);
         $post->delete();
 
-        return response()->json(null, 204);
+        return ok(data: null);
     }
+
 
     public function search(Request $request)
     {
