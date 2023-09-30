@@ -134,6 +134,51 @@ class PostsController extends Controller
 
     }
 
+    /**
+
+     * @OA\Get  (
+     *      path="/api/posts/{id}",
+     *      operationId="get-post",
+     *      tags={"posts"},
+     *      summary=" show the Post",
+     *      description=" ",
+     *      @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Example ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Error")
+     *             )
+     *         )
+     *     ),
+
+     *   *   @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                property="data",
+     *                 oneOf={
+     *                 @OA\Schema(ref="#/components/schemas/Post")
+     *
+     *             },
+     *             )
+     *         )
+     *     )
+     *     )
+     */
     public function show($id)
     {
         $post = Post::with('tags')->findOrFail($id);
@@ -198,7 +243,6 @@ class PostsController extends Controller
      *                property="data",
      *                 oneOf={
      *                 @OA\Schema(ref="#/components/schemas/Post")
-     *
      *             },
      *             )
      *         )

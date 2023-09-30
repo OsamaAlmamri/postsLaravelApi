@@ -525,6 +525,64 @@
             }
         },
         "/api/posts/{id}": {
+            "get": {
+                "tags": [
+                    "posts"
+                ],
+                "summary": " show the Post",
+                "description": " ",
+                "operationId": "get-post",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Example ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Error"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "oneOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/Post"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "put": {
                 "tags": [
                     "posts"
@@ -676,6 +734,53 @@
                         "Authorization": []
                     }
                 ]
+            }
+        },
+        "/api/tags": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": " Tags",
+                "operationId": "get-tags",
+                "responses": {
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Error"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Tag"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -856,6 +961,18 @@
                         "format": "date-time",
                         "example": "2023-09-04T22:29:09.000000Z"
                     },
+                    "user": {
+                        "description": "The tags of the post",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Tag"
+                        },
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/UserData"
+                            }
+                        ]
+                    },
                     "tags": {
                         "description": "The tags of the post",
                         "type": "array",
@@ -959,18 +1076,6 @@
                 },
                 "type": "object"
             },
-            "PostSearchRequest": {
-                "title": "Post Search Request",
-                "description": "Post Request  Search",
-                "properties": {
-                    "search": {
-                        "description": "search key in post title or desrption or tags",
-                        "type": "string",
-                        "example": "email"
-                    }
-                },
-                "type": "object"
-            },
             "RegisterRequest": {
                 "title": "Register Request",
                 "description": "RegisterRequest",
@@ -1023,6 +1128,28 @@
                         "description": "The slug of the tag",
                         "type": "string",
                         "example": "secure-email"
+                    }
+                },
+                "type": "object"
+            },
+            "UserData": {
+                "title": "User Data",
+                "description": "Schema for user data",
+                "properties": {
+                    "id": {
+                        "description": "The ID of the user",
+                        "type": "string",
+                        "example": "01h84ym49w7byskc4wrcmnyszc"
+                    },
+                    "name": {
+                        "description": "The name of the user",
+                        "type": "string",
+                        "example": "اسامة"
+                    },
+                    "email": {
+                        "description": "The email address of the user",
+                        "type": "string",
+                        "example": "osama.moh.almamari@gmail.com"
                     }
                 },
                 "type": "object"

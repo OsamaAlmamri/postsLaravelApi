@@ -80,6 +80,19 @@ class PostSchema
 
     /**
      * @OA\Property(
+     *     property="user",
+     *        oneOf={
+     *          @OA\Schema(ref="#/components/schemas/UserData")
+     *             },
+     *     description="The tags of the post",
+     *     @OA\Items(ref="#/components/schemas/Tag")
+     * )
+     *
+     * @var array
+     */
+    private $user;
+    /**
+     * @OA\Property(
      *     property="tags",
      *     type="array",
      *     description="The tags of the post",

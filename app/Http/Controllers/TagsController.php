@@ -17,6 +17,40 @@ use Illuminate\Http\Request;
 class TagsController extends Controller
 {
 
+    /**
+
+     * @OA\Get  (
+     *      path="/api/tags",
+     *      operationId="get-tags",
+     *      tags={"tags"},
+     *      summary=" Tags",
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Error")
+     *             )
+     *         )
+     *     ),
+
+     *   *   @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                property="data",
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/Tag")
+     *             )
+     *         )
+     *     )
+     *     )
+     */
     public function index(Request $request)
     {
         $tags = Tag::all();
