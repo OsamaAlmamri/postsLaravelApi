@@ -15,9 +15,120 @@ use Illuminate\Http\Request;
 class PostsController extends Controller
 {
 
+    /**
+     * @OA\Schema(
+     *     schema="PostPagnations",
+     *     type="object",
+     *     @OA\Property(
+     *         property="data",
+     *         type="object",
+     *         @OA\Property(property="current_page",example=1 ,type="integer"),
+     *         @OA\Property(
+     *             property="data",
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="title", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(
+     *                     property="user",
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="name", type="string"),
+     *                     @OA\Property(property="email", type="string"),
+     *                 ),
+     *                 @OA\Property(
+     *                     property="tags",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="name", type="string"),
+     *                         @OA\Property(property="slug", type="string"),
+     *                     ),
+     *                 ),
+     *             ),
+     *         ),
+     *         @OA\Property(property="first_page_url", type="string"),
+     *         @OA\Property(property="from", type="integer"),
+     *         @OA\Property(property="last_page", type="integer"),
+     *         @OA\Property(property="last_page_url", type="string"),
+     *         @OA\Property(
+     *             property="links",
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="url", type="string", nullable=true),
+     *                 @OA\Property(property="label", type="string"),
+     *                 @OA\Property(property="active", type="boolean"),
+     *             ),
+     *         ),
+     *         @OA\Property(property="next_page_url", type="string", nullable=true),
+     *         @OA\Property(property="path", type="string"),
+     *         @OA\Property(property="per_page",example=10, type="integer"),
+     *         @OA\Property(property="prev_page_url", type="string", nullable=true),
+     *         @OA\Property(property="to", example=10,type="integer"),
+     *         @OA\Property(property="total", example=100,type="integer"),
+     *     ),
+     * )
+
+     * @OA\Get  (
+     *      path="/api/posts",
+     *      operationId="all -posts with pagnation",
+     *      tags={"posts"},
+     *      summary=" Posts with the pagnation",
+
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="tag",
+     *         in="query",
+     *         description="Tag id or slug to retrive all relates posts ",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="search key in post title or desrption or tags",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Error")
+     *             )
+     *         )
+     *     ),
+     *
+     *   *   @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                property="data",
+     *                 oneOf={
+     *                 @OA\Schema(ref="#/components/schemas/PostPagnations")
+     *
+     *             },
+     *             )
+     *         )
+     *     )
+     *     )
+     */
     public function index(Request $request)
     {
-        $posts = Post::with('tags')->paginate(5);
+        $posts = Post::with('tags')->search()->paginate(10);
         PostResource::collection($posts);
         return ok(data:$posts);
 
@@ -264,16 +375,6 @@ class PostsController extends Controller
     }
 
 
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
 
-        $posts = Post::whereHas('tags', function ($query) use ($search) {
-            $query->where('name', 'LIKE', "%$search%");
-        })->orWhere('title', 'LIKE', "%$search%")->get();
-
-        return ok(data: PostResource::collection($posts));
-
-    }
 
 }

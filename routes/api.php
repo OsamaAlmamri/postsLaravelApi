@@ -20,7 +20,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::get('posts', [PostsController::class, 'index']);
 Route::get('posts/{id}', [PostsController::class, 'show']);
 Route::get('tags', [TagsController::class, 'index']);
-Route::get('posts/search', [PostsController::class, 'search']);
 Route::middleware('auth:sanctum')->group(callback: function () {
     Route::post('posts', [PostsController::class, 'store']);
     Route::put('posts/{id}', [PostsController::class, 'update']);
